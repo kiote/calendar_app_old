@@ -29,18 +29,10 @@ def oauth2callback():
   flow = client.flow_from_clientsecrets(
       'client_secrets.json',
       scope='https://www.googleapis.com/auth/drive.metadata.readonly',
-      redirect_uri="https://gcalendar-api-events.herokuapp.com/oauth2callback/",
-      include_granted_scopes=True)
-  return 'hi'
-  # if 'code' not in flask.request.args:
-  #   auth_uri = flow.step1_get_authorize_url()
-  #   return flask.redirect(auth_uri)
-  # else:
-  #   auth_code = flask.request.args.get('code')
-  #   credentials = flow.step2_exchange(auth_code)
-  #   flask.session['credentials'] = credentials.to_json()
-    # return flask.redirect(flask.url_for('index'))
+      redirect_uri='https://gcalendar-api-events.herokuapp.com/oauth2callback')
 
+  auth_uri = flow.step1_get_authorize_url()
+  return flask.redirect(auth_uri)
 
 if __name__ == '__main__':
   import uuid
