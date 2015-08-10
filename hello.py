@@ -18,10 +18,11 @@ def index():
   if credentials.access_token_expired:
     return flask.redirect(flask.url_for('oauth2callback'))
   else:
-    http_auth = credentials.authorize(httplib2.Http())
-    drive_service = discovery.build('drive', 'v2', http_auth)
-    files = drive_service.files().list().execute()
-    return json.dumps(files)
+    return 'success'
+    # http_auth = credentials.authorize(httplib2.Http())
+    # drive_service = discovery.build('drive', 'v2', http_auth)
+    # files = drive_service.files().list().execute()
+    # return json.dumps(files)
 
 
 @app.route('/authorize')
