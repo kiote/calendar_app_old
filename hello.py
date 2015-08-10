@@ -25,8 +25,8 @@ def index():
     # return json.dumps(files)
 
 
-@app.route('/authorize')
-def authorize():
+@app.route('/oauth2callback')
+def oauth2callback():
   flow = client.flow_from_clientsecrets(
       'client_secrets.json',
       scope='https://www.googleapis.com/auth/calendar',
@@ -34,11 +34,6 @@ def authorize():
 
   auth_uri = flow.step1_get_authorize_url()
   return flask.redirect(auth_uri)
-
-
-@app.route ('/oauth2callback')
-def oauth2callback():
-    return 'authorized'
 
 if __name__ == '__main__':
   import uuid
