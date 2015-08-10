@@ -13,7 +13,7 @@ app = flask.Flask(__name__)
 @app.route('/')
 def index():
   if 'credentials' not in flask.session:
-    return flask.redirect(flask.url_for('oauth2callback'))
+    return flask.redirect(flask.url_for('auth'))
   credentials = client.OAuth2Credentials.from_json(flask.session['credentials'])
   if credentials.access_token_expired:
     return flask.redirect(flask.url_for('oauth2callback'))
@@ -24,8 +24,8 @@ def index():
     return json.dumps(files)
 
 
-@app.route('/oauth2callback')
-def oauth2callback():
+@app.route('/authorize')
+def authorize():
   flow = client.flow_from_clientsecrets(
       'client_secrets.json',
       scope='https://www.googleapis.com/auth/calendar',
@@ -33,6 +33,11 @@ def oauth2callback():
 
   auth_uri = flow.step1_get_authorize_url()
   return flask.redirect(auth_uri)
+
+
+@app.route ('/oauth2callback')
+def oauth2callback():
+    return 'authorized'
 
 if __name__ == '__main__':
   import uuid
