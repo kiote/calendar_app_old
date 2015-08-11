@@ -47,6 +47,7 @@ def oauth2callback():
     print "11"
     auth_code = flask.request.args.get('code')
     print "12"
+    print auth_code
     credentials = flow.step2_exchange(auth_code)
     print "13"
     flask.session['credentials'] = credentials.to_json()
