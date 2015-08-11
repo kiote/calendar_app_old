@@ -12,19 +12,13 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def index():
-  print "1"
   if 'credentials' not in flask.session:
-    print "2"
     return flask.redirect(flask.url_for('oauth2callback'))
   credentials = client.OAuth2Credentials.from_json(flask.session['credentials'])
-  print "3"
   if credentials.access_token_expired:
-    print "4"
     return flask.redirect(flask.url_for('oauth2callback'))
   else:
-    print "5"
     http_auth = credentials.authorize(httplib2.Http())
-    print "6"
     # drive_service = discovery.build('drive', 'v2', http_auth)
     # files = drive_service.files().list().execute()
     return 'authorized!'
@@ -42,8 +36,8 @@ def oauth2callback():
   else:
     auth_code = flask.request.args.get('code')
     credentials = flow.step2_exchange(auth_code)
+    print flask.session['credentials']
     flask.session['credentials'] = credentials.to_json()
-    print "hwe1!"
     return flask.redirect(flask.url_for('index'))
 
 
