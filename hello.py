@@ -32,17 +32,25 @@ def index():
 
 @app.route('/oauth2callback')
 def oauth2callback():
+  print "7"
   flow = client.flow_from_clientsecrets(
       'client_secrets.json',
       scope='https://www.googleapis.com/auth/calendar',
       redirect_uri='https://gcalendar-api-events.herokuapp.com/oauth2callback')
+  print "8"
   if 'code' not in flask.request.args:
+    print "9"
     auth_uri = flow.step1_get_authorize_url()
+    print "10"
     return flask.redirect(auth_uri)
   else:
+    print "11"
     auth_code = flask.request.args.get('code')
+    print "12"
     credentials = flow.step2_exchange(auth_code)
+    print "13"
     flask.session['credentials'] = credentials.to_json()
+    print "14"
     return flask.redirect(flask.url_for('index'))
 
 
