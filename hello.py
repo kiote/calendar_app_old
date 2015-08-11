@@ -1,22 +1,22 @@
 import json
 
-import flask
+from flask import Flask, session, redirect, url_for, escape, request
 import httplib2
 
 from apiclient import discovery
 from oauth2client import client
 
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-  if 'credentials' not in flask.session:
-    return flask.redirect(flask.url_for('oauth2callback'))
+  if 'credentials' not in session:
+    return redirect(url_for('oauth2callback'))
   credentials = client.OAuth2Credentials.from_json(flask.session['credentials'])
   if credentials.access_token_expired:
-    return flask.redirect(flask.url_for('oauth2callback'))
+    return redirect(url_for('oauth2callback'))
   else:
     http_auth = credentials.authorize(httplib2.Http())
     # drive_service = discovery.build('drive', 'v2', http_auth)
@@ -30,15 +30,15 @@ def oauth2callback():
       'client_secrets.json',
       scope='https://www.googleapis.com/auth/calendar',
       redirect_uri='https://gcalendar-api-events.herokuapp.com/oauth2callback')
-  if 'code' not in flask.request.args:
+  if 'code' not in request.args:
     auth_uri = flow.step1_get_authorize_url()
-    return flask.redirect(auth_uri)
+    return redirect(auth_uri)
   else:
-    auth_code = flask.request.args.get('code')
+    auth_code = request.args.get('code')
     credentials = flow.step2_exchange(auth_code)
-    print flask.session['credentials']
-    flask.session['credentials'] = credentials.to_json()
-    return flask.redirect(flask.url_for('index'))
+    print session['credentials']
+    session['credentials'] = credentials.to_json()
+    return redirect(flask.url_for('index'))
 
 
 if __name__ == '__main__':
