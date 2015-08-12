@@ -44,9 +44,10 @@ def oauth2callback():
     return redirect(flask.url_for('index'))
 
 
+app.secret_key = str(uuid.uuid4())
+
 if __name__ == '__main__':
   import uuid
-  app.secret_key = str(uuid.uuid4())
   app.config['SESSION_TYPE'] = 'filesystem'
   app.debug = True
   app.run()
