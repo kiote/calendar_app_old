@@ -40,7 +40,7 @@ def oauth2callback():
     try:
         session['credentials'] = credentials.to_json()
     except:
-        traceback.format_exc()
+        print traceback.format_exc()
     return redirect(flask.url_for('index'))
 
 
