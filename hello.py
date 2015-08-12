@@ -19,7 +19,7 @@ def index():
     print "2"
     return redirect(url_for('oauth2callback'))
   print "3"
-  credentials = client.OAuth2Credentials.from_json(flask.session['credentials'])
+  credentials = client.OAuth2Credentials.from_json(session['credentials'])
   print "4"
   if credentials.access_token_expired:
     print "5"
