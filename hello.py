@@ -1,5 +1,5 @@
 import json
-import sys
+import sys, traceback
 
 from flask import Flask, session, redirect, url_for, escape, request
 import httplib2
@@ -40,8 +40,7 @@ def oauth2callback():
     try:
         session['credentials'] = credentials.to_json()
     except:
-        e = sys.exc_info()[0]
-        print e
+        traceback.format_exc()
     return redirect(flask.url_for('index'))
 
 
