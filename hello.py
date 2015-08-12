@@ -1,5 +1,6 @@
 import json
 import sys, traceback
+import uuid
 
 from flask import Flask, session, redirect, url_for, escape, request
 import httplib2
@@ -44,10 +45,9 @@ def oauth2callback():
     return redirect(flask.url_for('index'))
 
 
+app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key = str(uuid.uuid4())
 
 if __name__ == '__main__':
-  import uuid
-  app.config['SESSION_TYPE'] = 'filesystem'
   app.debug = True
   app.run()
