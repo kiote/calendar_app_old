@@ -14,20 +14,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-  print "1"
   if 'credentials' not in session:
-    print "2"
     return redirect(url_for('oauth2callback'))
-  print "3"
   credentials = client.OAuth2Credentials.from_json(session['credentials'])
-  print "4"
   if credentials.access_token_expired:
-    print "5"
     return redirect(url_for('oauth2callback'))
   else:
-    print "6"
     http_auth = credentials.authorize(httplib2.Http())
-    print "7"
     # drive_service = discovery.build('drive', 'v2', http_auth)
     # files = drive_service.files().list().execute()
     return 'authorized!'
