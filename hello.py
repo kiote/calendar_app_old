@@ -1,4 +1,5 @@
 import json
+import sys
 
 from flask import Flask, session, redirect, url_for, escape, request
 import httplib2
@@ -36,8 +37,11 @@ def oauth2callback():
   else:
     auth_code = request.args.get('code')
     credentials = flow.step2_exchange(auth_code)
-    print session['credentials']
-    session['credentials'] = credentials.to_json()
+    try:
+        session['credentials'] = credentials.to_json()
+    except:
+        e = sys.exc_info()[0]
+        print e
     return redirect(flask.url_for('index'))
 
 
