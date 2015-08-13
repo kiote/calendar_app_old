@@ -51,7 +51,7 @@ def index():
         }
 
         event = service.events().insert(calendarId='primary', body=event).execute()
-        return 'Event created: %s' % (event.get('htmlLink'))
+        return 'Event created, you can edit it <a herf="%s">here</a>' % (event.get('htmlLink'))
     except:
         return traceback.format_exc()
 
