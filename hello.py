@@ -32,7 +32,7 @@ def index():
             'timeZone': 'America/Los_Angeles',
           },
           'end': {
-            'dateTime': '2015-05-28T18:30:00-07:00',
+            'dateTime': '2015-09-28T18:30:00-07:00',
             'timeZone': 'America/Los_Angeles',
           },
           'recurrence': [
