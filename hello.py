@@ -38,8 +38,7 @@ def index():
         'RRULE:FREQ=DAILY;COUNT=2'
       ],
       'attendees': [
-        {'email': 'study@studywebsite.com'},
-        # {'email': 'sbrin@example.com'},
+        {'email': 'study@studywebsite.com'}
       ],
       'reminders': {
         'useDefault': False,
