@@ -23,23 +23,23 @@ def index():
     http_auth = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http_auth)
     event = {
-      'summary': 'Google I/O 2015',
-      'location': '800 Howard St., San Francisco, CA 94103',
+      'summary': 'Programming Task',
+      'location': 'http://www.path.to/study/website',
       'description': 'A chance to hear more about Google\'s developer products.',
       'start': {
-        'dateTime': '2015-05-28T09:00:00-07:00',
+        'dateTime': '2015-09-28T18:00:00-07:00',
         'timeZone': 'America/Los_Angeles',
       },
       'end': {
-        'dateTime': '2015-05-28T17:00:00-07:00',
+        'dateTime': '2015-05-28T18:30:00-07:00',
         'timeZone': 'America/Los_Angeles',
       },
       'recurrence': [
         'RRULE:FREQ=DAILY;COUNT=2'
       ],
       'attendees': [
-        {'email': 'lpage@example.com'},
-        {'email': 'sbrin@example.com'},
+        {'email': 'study@studywebsite.com'},
+        # {'email': 'sbrin@example.com'},
       ],
       'reminders': {
         'useDefault': False,
