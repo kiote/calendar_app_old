@@ -2,7 +2,7 @@ import json
 import sys, traceback
 import uuid
 
-from flask import Flask, session, redirect, url_for, escape, request
+from flask import Flask, session, redirect, url_for, escape, request, render_template
 import httplib2
 
 from apiclient import discovery
@@ -51,7 +51,7 @@ def index():
         }
 
         event = service.events().insert(calendarId='primary', body=event).execute()
-        return 'Event created, you can edit it <a herf="%s">here</a>' % (event.get('htmlLink'))
+        return render_template('event.html', event_url=event.get('htmlLink'))
     except:
         return traceback.format_exc()
 
