@@ -1,6 +1,6 @@
 import json
 import sys
-import errors
+from apiclient import errors
 import logging
 import uuid
 
