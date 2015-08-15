@@ -1,4 +1,4 @@
-from templates.event import event
+from templates.event import event_json
 from apiclient import discovery
 
 class Event:
@@ -7,5 +7,5 @@ class Event:
 
     def create_event(self):
         service = discovery.build('calendar', 'v3', http=self.http_auth)
-        event_created = service.events().insert(calendarId='primary', body=event).execute()
+        event_created = service.events().insert(calendarId='primary', body=event_json).execute()
         return event_created

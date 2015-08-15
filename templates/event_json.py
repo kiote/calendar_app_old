@@ -1,4 +1,4 @@
-event = {
+event_json = {
   'summary': 'Programming Task',
   'location': 'http://www.path.to/study/website',
   'description': 'A chance to hear more about Google\'s developer products.',
