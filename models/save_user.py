@@ -15,4 +15,4 @@ class SaveUser:
         count = self.r.get(self.user['email'] + ':count')
         if count is None:
             count = 0
-        return count
+        return int(count)
