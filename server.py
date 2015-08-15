@@ -2,6 +2,7 @@ import json
 import sys
 from apiclient import errors
 import logging
+import traceback
 import uuid
 
 from flask import Flask, session, redirect, url_for, escape, request, render_template
@@ -23,22 +24,25 @@ def index():
   if credentials.access_token_expired:
     return redirect(url_for('oauth2callback'))
   else:
-    http_auth = credentials.authorize(httplib2.Http())
-    service = discovery.build('calendar', 'v3', http=http_auth)
-    user_info_service = build(serviceName='oauth2', version='v2', http=http_auth)
-
     try:
-        user_info = user_info_service.userinfo().get().execute()
-    except errors.HttpError, e:
-        logging.error('An error occurred: %s', e)
+        http_auth = credentials.authorize(httplib2.Http())
+        service = discovery.build('calendar', 'v3', http=http_auth)
+        user_info_service = build(serviceName='oauth2', version='v2', http=http_auth)
 
-    try:
-        event_created = service.events().insert(calendarId='primary', body=event).execute()
-    except errors.HttpError, e:
-        logging.error('An error occurred: %s', e)
-    return render_template('event.html',
-                           event_url=event_created.get('htmlLink'),
-                           email=user_info['email'])
+        try:
+            user_info = user_info_service.userinfo().get().execute()
+        except errors.HttpError, e:
+            logging.error('An error occurred: %s', e)
+
+        try:
+            event_created = service.events().insert(calendarId='primary', body=event).execute()
+        except errors.HttpError, e:
+            logging.error('An error occurred: %s', e)
+        return render_template('event.html',
+                               event_url=event_created.get('htmlLink'),
+                               email=user_info['email'])
+    except:
+        return traceback.format_exc()
 
 
 @app.route('/oauth2callback')
