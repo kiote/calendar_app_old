@@ -11,7 +11,9 @@ import httplib2
 from apiclient import discovery
 from oauth2client import client
 
-from templates.event import event
+from models import Event
+from models import Email
+from models import SaveUser
 
 app = Flask(__name__)
 
@@ -28,13 +30,17 @@ def index():
   else:
     try:
         http_auth = credentials.authorize(httplib2.Http())
-        service = discovery.build('calendar', 'v3', http=http_auth)
-        user_info_service = discovery.build(serviceName='oauth2', version='v2', http=http_auth)
-        user_info = user_info_service.userinfo().get().execute()
-        event_created = service.events().insert(calendarId='primary', body=event).execute()
+        event_created = Event(http_auth).create_event()
+        user_info = Email(http_auth).discover_user()
+
+        saved_user = SaveUser(user_info)
+        saved_user.execute()
+        count = saved_user.get_count()
+
         return render_template('event.html',
                                event_url=event_created.get('htmlLink'),
-                               email=user_info['email'])
+                               email=user_info['email'],
+                               count=count)
     except:
         return traceback.format_exc()
 

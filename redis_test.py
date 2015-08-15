@@ -1,9 +1,6 @@
-# import os
-# import redis
-#
-# r = redis.from_url(os.environ.get("REDIS_URL"))
-# r.set('foo', 'bar')
-# print r.get('foo')
-from templates.event import event
+import os
+import redis
 
-print event
+r = redis.from_url(os.environ.get("REDIS_URL"))
+r.set('foo', 'bar')
+print r.get('foo')
