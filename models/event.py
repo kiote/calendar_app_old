@@ -1,4 +1,4 @@
-from templates.event import event_json
+from templates.event_json import event_json
 from apiclient import discovery
 
 class Event:

@@ -11,9 +11,9 @@ import httplib2
 from apiclient import discovery
 from oauth2client import client
 
-from models import Event
-from models import Email
-from models import SaveUser
+from models.event import Event
+from models.email import Email
+from models.save_user import SaveUser
 
 app = Flask(__name__)
 
