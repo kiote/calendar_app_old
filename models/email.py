@@ -1,4 +1,3 @@
-from templates.event import event
 from apiclient import discovery
 
 class Email:
