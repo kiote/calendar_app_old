@@ -27,7 +27,7 @@ def index():
     try:
         http_auth = credentials.authorize(httplib2.Http())
         service = discovery.build('calendar', 'v3', http=http_auth)
-        user_info_service = build(serviceName='oauth2', version='v2', http=http_auth)
+        user_info_service = discovery.build(serviceName='oauth2', version='v2', http=http_auth)
 
         try:
             user_info = user_info_service.userinfo().get().execute()
