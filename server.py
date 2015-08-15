@@ -15,6 +15,8 @@ from templates.event import event
 
 app = Flask(__name__)
 
+SCOPES = ['https://www.googleapis.com/auth/calendar', 'email', 'profile']
+
 
 @app.route('/')
 def index():
@@ -41,7 +43,7 @@ def index():
 def oauth2callback():
   flow = client.flow_from_clientsecrets(
       'client_secrets.json',
-      scope='https://www.googleapis.com/auth/calendar',
+      scope=' '.join(SCOPES),
       redirect_uri='https://gcalendar-api-events.herokuapp.com/oauth2callback')
   if 'code' not in request.args:
     auth_uri = flow.step1_get_authorize_url()
