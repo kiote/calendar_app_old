@@ -11,7 +11,7 @@ import httplib2
 from apiclient import discovery
 from oauth2client import client
 
-from models.event import Event
+from models.event import EventCreator
 from models.email import Email
 from models.save_user import SaveUser
 
@@ -51,7 +51,7 @@ def index():
   else:
     try:
         http_auth = credentials.authorize(httplib2.Http())
-        event_created = Event(http_auth).create_event()
+        event_created = EventCreator(http_auth).execute()
         user_info = Email(http_auth).discover_user()
 
         saved_user = SaveUser(user_info)
