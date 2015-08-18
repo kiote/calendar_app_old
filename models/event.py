@@ -24,8 +24,7 @@ class EventChecker:
         """
         event = self.service.events().get(calendarId='primary',
                                           eventId=self.event_id).execute()
-        # if event time != event_json time we need to write to redis
-        # changed flag
+        print event
 
 
 class EventCreator:
