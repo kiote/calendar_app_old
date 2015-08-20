@@ -1,13 +1,16 @@
-from rq import Worker, Queue, Connection
-from models.redis_conn import get_connection
+from models.redis_conn import get_data_connection
+from models.event_writer_structure import EventWriterStructure
 
-listen = ['high', 'default', 'low']
+def get_email(key):
+    return key.split(':')[0]
 
-conn = get_connection
+redis = get_data_connection()
 
-if __name__ == '__main__':
-    with Connection(conn):
-        worker = Worker(map(Queue, listen))
-        # burst=True mode stops worker after all jobs done
-        # we need this to run workers with scheduler
-        worker.work(True)
+unchecked_keys = redis.lrange('unchecked', 0, -1)
+print unchecked_keys
+
+for key in unchecked_keys:
+    event_structure = EventWriterStructure(key)
+    email = event_structure.get_data_by_field_name('email')
+    id = event_structure.get_data_by_field_name('event_id')
+    

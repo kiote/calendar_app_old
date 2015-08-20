@@ -1,14 +1,12 @@
 import json
-import sys
 from apiclient import errors
 import logging
 import traceback
 import uuid
 
-from flask import Flask, session, redirect, url_for, escape, request, render_template
+from flask import Flask, session, redirect, url_for, request, render_template
 import httplib2
 
-from apiclient import discovery
 from oauth2client import client
 
 from models.event import EventCreator
@@ -23,10 +21,10 @@ SCOPES = ['https://www.googleapis.com/auth/calendar', 'email', 'profile']
 @app.route('/stat')
 def stat():
     if 'credentials' not in session:
-      return redirect(url_for('oauth2callback'))
+        return redirect(url_for('oauth2callback'))
     credentials = client.OAuth2Credentials.from_json(session['credentials'])
     if credentials.access_token_expired:
-      return redirect(url_for('oauth2callback'))
+        return redirect(url_for('oauth2callback'))
     else:
         try:
             http_auth = credentials.authorize(httplib2.Http())
@@ -51,11 +49,8 @@ def index():
   else:
     try:
         http_auth = credentials.authorize(httplib2.Http())
-        event_created = EventCreator(http_auth).execute()
         user_info = Email(http_auth).discover_user()
-
-        saved_user = SaveUser(user_info)
-        saved_user.execute()
+        event_created = EventCreator(http_auth, user_info).execute()
 
         return render_template('event.html',
                                event_url=event_created.get('htmlLink'),
@@ -87,5 +82,5 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.secret_key = str(uuid.uuid4())
 
 if __name__ == '__main__':
-  app.debug = True
-  app.run()
+    app.debug = True
+    app.run()

@@ -1,6 +1,10 @@
 from apiclient import discovery
 
+
 class Email:
+
+    """Get user email from OAuth2 service."""
+
     def __init__(self, http_auth):
         self.http_auth = http_auth
 
