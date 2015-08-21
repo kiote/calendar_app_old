@@ -10,6 +10,7 @@ import httplib2
 from oauth2client import client
 
 from models.event import EventCreator
+from models.event import EventSaver
 from models.email import Email
 from models.save_user import SaveUser
 
@@ -41,22 +42,25 @@ def stat():
 
 @app.route('/')
 def index():
-  if 'credentials' not in session:
-    return redirect(url_for('oauth2callback'))
-  credentials = client.OAuth2Credentials.from_json(session['credentials'])
-  if credentials.access_token_expired:
-    return redirect(url_for('oauth2callback'))
-  else:
-    try:
-        http_auth = credentials.authorize(httplib2.Http())
-        user_info = Email(http_auth).discover_user()
-        event_created = EventCreator(http_auth, user_info).execute()
+    if 'credentials' not in session:
+        return redirect(url_for('oauth2callback'))
+    credentials = client.OAuth2Credentials.from_json(session['credentials'])
+    print session['credentials']
+    if credentials.access_token_expired:
+        return redirect(url_for('oauth2callback'))
+    else:
+        try:
+            http_auth = credentials.authorize(httplib2.Http())
+            user_info = Email(http_auth).discover_user()
+            event_created = EventCreator(http_auth).execute()
 
-        return render_template('event.html',
-                               event_url=event_created.get('htmlLink'),
-                               email=user_info['email'])
-    except:
-        return traceback.format_exc()
+            EventSaver(event_created['id'], user_info, session['credentials']).execute()
+
+            return render_template('event.html',
+                                   event_url=event_created.get('htmlLink'),
+                                   email=user_info['email'])
+        except:
+            return traceback.format_exc()
 
 
 @app.route('/oauth2callback')
