@@ -3,6 +3,7 @@ from apiclient import discovery
 from models.redis_conn import get_data_connection
 from oauth2client import client
 import httplib2
+import traceback
 
 class EventSaver:
 
@@ -19,7 +20,7 @@ class EventSaver:
         self.r = get_data_connection()
 
     def execute(self):
-        data_string = "%s:%s:%s" % (self.user_info['email'],
+        data_string = "%s|%s|%s" % (self.user_info['email'],
                                     self.event_id,
                                     self.credentials)
         # avoid adding one event several time
@@ -38,23 +39,27 @@ class EventChecker:
 
     def __init__(self, event):
         self.event = event
-        splitted = event.split(':')
+        splitted = event.split('|')
+
         self.email = splitted[0]
         self.event_id = splitted[1]
-        self.credentials = splitted[2]
+        self.credentials = "".join(splitted[2:])
         self.r = get_data_connection()
 
     def execute(self):
-        credentials = client.OAuth2Credentials.from_json(self.credentials)
-        http_auth = credentials.authorize(httplib2.Http())
-        service = discovery.build('calendar', 'v3', http=http_auth)
-        event = service.events().get(calendarId='primary',
-                                     eventId=self.event_id).execute()
-        self.r.lrem('unchecked', self.event, 0)
-        if event['start']['dateTime'] != event_json['start']['dateTime']:
-            self.r.lpush('changed', self.event)
-        else:
-            self.r.lpush('unchanged', self.event)
+        try:
+            credentials = client.OAuth2Credentials.from_json(self.credentials)
+            http_auth = credentials.authorize(httplib2.Http())
+            service = discovery.build('calendar', 'v3', http=http_auth)
+            event = service.events().get(calendarId='primary',
+                                         eventId=self.event_id).execute()
+            self.r.lrem('unchecked', self.event, 0)
+            if event['start']['dateTime'] != event_json['start']['dateTime']:
+                self.r.lpush('changed', self.event)
+            else:
+                self.r.lpush('unchanged', self.event)
+        except:
+            print traceback.format_exc()
 
 
 class EventCreator:

@@ -45,7 +45,6 @@ def index():
     if 'credentials' not in session:
         return redirect(url_for('oauth2callback'))
     credentials = client.OAuth2Credentials.from_json(session['credentials'])
-    print session['credentials']
     if credentials.access_token_expired:
         return redirect(url_for('oauth2callback'))
     else:
