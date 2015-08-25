@@ -1,6 +1,12 @@
 {% extends "layout.html" %}
 {% block body %}
-  User email: {{ email }}
-  <br />
-  Saved (times): {{ count }}
+  Users did not change the event:<br/>
+  {% for event in unchanged %}
+    {{ event }}<br/>
+  {% endfor %}
+  <hr />
+  Users, who change the event:<br/>
+  {% for event in changed %}
+    {{ event }}<br/>
+  {% endfor %}
 {% endblock %}

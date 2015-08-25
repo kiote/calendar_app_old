@@ -5,6 +5,27 @@ from oauth2client import client
 import httplib2
 import traceback
 
+class UncheckedEvent:
+    def __init__(self, event_id, email, credentials):
+        self.event_id = event_id
+        self.credentials = credentials
+        self.email = email
+
+    def __str__(self):
+        return "%s|%s|%s" % (self.email,
+                             self.event_id,
+                             self.credentials)
+
+
+class CheckedEvent:
+    def __init__(self, event_id, user_info):
+        self.event_id = event_id
+        self.user_info = user_info
+
+    def __str__(self):
+        return "%s|%s" % (self.user_info['email'],
+                          self.event_id)
+
 class EventSaver:
 
     """
@@ -20,9 +41,9 @@ class EventSaver:
         self.r = get_data_connection()
 
     def execute(self):
-        data_string = "%s|%s|%s" % (self.user_info['email'],
-                                    self.event_id,
-                                    self.credentials)
+        data_string = str(UncheckedEvent(self.user_info['email'],
+                                         self.event_id,
+                                         self.credentials))
         # avoid adding one event several time
         self.r.lrem('unchecked', data_string, 0)
         self.r.lpush('unchecked', data_string)
@@ -53,14 +74,26 @@ class EventChecker:
             service = discovery.build('calendar', 'v3', http=http_auth)
             event = service.events().get(calendarId='primary',
                                          eventId=self.event_id).execute()
-            self.r.lrem('unchecked', self.event, 0)
+            self.r.lrem('unchecked', str(UncheckedEvent(self.event_id, self.email, self.credentials)), 0)
             if event['start']['dateTime'] != event_json['start']['dateTime']:
-                self.r.lpush('changed', self.event)
+                self.r.lpush('changed', str(CheckedEvent(self.event_id, self.email)))
             else:
-                self.r.lpush('unchanged', self.event)
+                self.r.lpush('unchanged', str(CheckedEvent(self.event_id, self.email)))
         except:
             print traceback.format_exc()
 
+
+class EventList:
+
+    """Return list of changed/unchanged events"""
+
+    def __init__(self):
+        self.r = get_data_connection()
+
+    def get(self):
+        unchanged = self.r.lrange('unchanged', 0, -1)
+        changed = self.r.lrange('changed', 0, -1)
+        return unchanged, changed
 
 class EventCreator:
 

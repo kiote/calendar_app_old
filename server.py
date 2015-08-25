@@ -11,8 +11,8 @@ from oauth2client import client
 
 from models.event import EventCreator
 from models.event import EventSaver
+from models.event import EventList
 from models.email import Email
-from models.save_user import SaveUser
 
 app = Flask(__name__)
 
@@ -21,24 +21,14 @@ SCOPES = ['https://www.googleapis.com/auth/calendar', 'email', 'profile']
 
 @app.route('/stat')
 def stat():
-    if 'credentials' not in session:
-        return redirect(url_for('oauth2callback'))
-    credentials = client.OAuth2Credentials.from_json(session['credentials'])
-    if credentials.access_token_expired:
-        return redirect(url_for('oauth2callback'))
-    else:
-        try:
-            http_auth = credentials.authorize(httplib2.Http())
-            user_info = Email(http_auth).discover_user()
-            saved_user = SaveUser(user_info)
+    try:
+        unchanged, changed = EventList().get()
 
-            count = saved_user.get_count()
-
-            return render_template('stat.html',
-                                   email=user_info['email'],
-                                   count=count)
-        except:
-            return traceback.format_exc()
+        return render_template('stat.html',
+                               unchanged=unchanged,
+                               changed=changed)
+    except:
+        return traceback.format_exc()
 
 @app.route('/')
 def index():
