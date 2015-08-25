@@ -1,12 +1,14 @@
 {% extends "layout.html" %}
 {% block body %}
+  {% if unchanged %}
   Users did not change the event:<br/>
   {% for event in unchanged %}
-    {{ event }}<br/>
+    {{ event.split('|')[0] }}<br/>
   {% endfor %}
   <hr />
+  {% endif %}
   Users, who change the event:<br/>
   {% for event in changed %}
-    {{ event }}<br/>
+    {{ event.split('|')[0] }}<br/>
   {% endfor %}
 {% endblock %}
