@@ -32,7 +32,7 @@ def add_event(event_id):
             user_info = Email(http_auth).discover_user()
             event_created = EventCreator(http_auth, event_id).execute()
 
-            EventSaver(event_created['id'], user_info, session['credentials']).execute()
+            EventSaver(event_created['id'], event_id, user_info, session['credentials']).execute()
 
             return render_template('event.html', event_url=event_created.get('htmlLink'))
         except:

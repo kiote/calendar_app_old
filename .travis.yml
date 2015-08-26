@@ -1,0 +1,18 @@
+language: python
+
+python:
+  - "2.7"
+
+env:
+  global:
+    - BUILD_ON_TRAVIS=true
+    - PYTHONPATH="/home/travis/build/kiote/housing_survey"
+    - PIP_USE_MIRRORS=true
+
+#commands to install dependencies
+install:
+  - pip install -q -r requirements.txt
+
+#command to run the test suite
+script:
+  - python tests/test_event.py

@@ -21,7 +21,8 @@ class EventSaverTest(unittest.TestCase):
         service = ServiceMock()
         event_id = 'dummy_event_id'
         user_info = UserMock
-        self.subject = EventSaver(event_id, user_info, credentials_json)
+        internal_event_id = 0
+        self.subject = EventSaver(event_id, internal_event_id, user_info, credentials_json)
 
     def testExecutePushToQueue(self):
         self.subject.execute()

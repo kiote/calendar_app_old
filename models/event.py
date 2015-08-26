@@ -6,14 +6,16 @@ import httplib2
 import traceback
 
 class UncheckedEvent:
-    def __init__(self, event_id, email, credentials):
+    def __init__(self, event_id, internal_event_id, email, credentials):
         self.event_id = event_id
+        self.internal_event_id = internal_event_id
         self.credentials = credentials
         self.email = email
 
     def __str__(self):
-        return "%s|%s|%s" % (self.email,
+        return "%s|%s|%s|%s" % (self.email,
                              self.event_id,
+                             self.internal_event_id,
                              self.credentials)
 
 
@@ -34,8 +36,9 @@ class EventSaver:
     We add this events to "unchecked" queue (redis array).
     """
 
-    def __init__(self, event_id, user_info, credentials):
+    def __init__(self, event_id, internal_event_id, user_info, credentials):
         self.event_id = event_id
+        self.internal_event_id = internal_event_id
         self.credentials = credentials
         self.user_info = user_info
         self.r = get_data_connection()
@@ -43,6 +46,7 @@ class EventSaver:
     def execute(self):
         data_string = str(UncheckedEvent(self.user_info['email'],
                                          self.event_id,
+                                         self.internal_event_id,
                                          self.credentials))
         # avoid adding one event several time
         self.r.lrem('unchecked', data_string, 0)
@@ -59,12 +63,12 @@ class EventChecker:
     """
 
     def __init__(self, event):
-        self.event = event
         splitted = event.split('|')
 
         self.email = splitted[0]
         self.event_id = splitted[1]
-        self.credentials = "".join(splitted[2:])
+        self.internal_event_id = splitted[2]
+        self.credentials = "".join(splitted[3:])
         self.r = get_data_connection()
 
     def execute(self):
@@ -75,7 +79,8 @@ class EventChecker:
             event = service.events().get(calendarId='primary',
                                          eventId=self.event_id).execute()
             self.r.lrem('unchecked', str(UncheckedEvent(self.event_id, self.email, self.credentials)), 0)
-            if event['start']['dateTime'] != event_json['start']['dateTime']:
+            internal_event = events_json[self.internal_event_id]
+            if event['start']['dateTime'] != internal_event['start']['dateTime']:
                 self.r.lpush('changed', str(CheckedEvent(self.event_id, self.email)))
             else:
                 self.r.lpush('unchanged', str(CheckedEvent(self.event_id, self.email)))
