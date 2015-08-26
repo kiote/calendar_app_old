@@ -3,12 +3,12 @@
   {% if unchanged %}
   Users did not change the event:<br/>
   {% for event in unchanged %}
-    {{ event.split('|')[0] }}<br/>
+    {{ event.split('|')[0] }} - {{event.split('|')[2]}}<br/>
   {% endfor %}
   <hr />
   {% endif %}
   Users, who change the event:<br/>
   {% for event in changed %}
-    {{ event.split('|')[0] }}<br/>
+    {{ event.split('|')[0] }} - {{event.split('|')[2]}}<br/>
   {% endfor %}
 {% endblock %}

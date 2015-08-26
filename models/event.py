@@ -20,13 +20,15 @@ class UncheckedEvent:
 
 
 class CheckedEvent:
-    def __init__(self, event_id, user_info):
+    def __init__(self, event_id, user_info, event_name):
         self.event_id = event_id
         self.user_info = user_info
+        self.event_name = event_name
 
     def __str__(self):
-        return "%s|%s" % (self.user_info['email'],
-                          self.event_id)
+        return "%s|%s|%s" % (self.user_info['email'],
+                             self.event_id,
+                             self.event_name)
 
 class EventSaver:
 
@@ -78,12 +80,12 @@ class EventChecker:
             service = discovery.build('calendar', 'v3', http=http_auth)
             event = service.events().get(calendarId='primary',
                                          eventId=self.event_id).execute()
-            self.r.lrem('unchecked', str(UncheckedEvent(self.event_id, self.email, self.credentials)), 0)
+            self.r.lrem('unchecked', str(UncheckedEvent(self.event_id, self.internal_event_id, self.email, self.credentials)), 0)
             internal_event = events_json[self.internal_event_id]
             if event['start']['dateTime'] != internal_event['start']['dateTime']:
-                self.r.lpush('changed', str(CheckedEvent(self.event_id, self.email)))
+                self.r.lpush('changed', str(CheckedEvent(self.event_id, self.email, internal_event['summary'])))
             else:
-                self.r.lpush('unchanged', str(CheckedEvent(self.event_id, self.email)))
+                self.r.lpush('unchanged', str(CheckedEvent(self.event_id, self.email, internal_event['summary'])))
         except:
             print traceback.format_exc()
 
