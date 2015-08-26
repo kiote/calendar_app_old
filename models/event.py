@@ -81,7 +81,7 @@ class EventChecker:
             event = service.events().get(calendarId='primary',
                                          eventId=self.event_id).execute()
             self.r.lrem('unchecked', str(UncheckedEvent(self.event_id, self.internal_event_id, self.email, self.credentials)), 0)
-            internal_event = events_json[self.internal_event_id]
+            internal_event = events_json[int(self.internal_event_id)]
             if event['start']['dateTime'] != internal_event['start']['dateTime']:
                 self.r.lpush('changed', str(CheckedEvent(self.event_id, self.email, internal_event['summary'])))
             else:
