@@ -3,11 +3,15 @@ language: python
 python:
   - "2.7"
 
+services:
+  - redis-server
+
 env:
   global:
     - BUILD_ON_TRAVIS=true
     - PYTHONPATH="/home/travis/build/kiote/calendar_app"
     - PIP_USE_MIRRORS=true
+    - REDIS_URL='127.0.0.1:6379'
 
 #commands to install dependencies
 install:
