@@ -14,9 +14,9 @@ class UncheckedEvent:
 
     def __str__(self):
         return "%s|%s|%s|%s" % (self.email,
-                             self.event_id,
-                             self.internal_event_id,
-                             self.credentials)
+                                self.event_id,
+                                self.internal_event_id,
+                                self.credentials)
 
 
 class CheckedEvent:
@@ -46,9 +46,9 @@ class EventSaver:
         self.r = get_data_connection()
 
     def execute(self):
-        data_string = str(UncheckedEvent(self.user_info['email'],
-                                         self.event_id,
+        data_string = str(UncheckedEvent(self.event_id,
                                          self.internal_event_id,
+                                         self.user_info['email'],
                                          self.credentials))
         # avoid adding one event several time
         self.r.lrem('unchecked', data_string, 0)
