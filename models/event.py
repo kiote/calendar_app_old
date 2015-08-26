@@ -20,13 +20,13 @@ class UncheckedEvent:
 
 
 class CheckedEvent:
-    def __init__(self, event_id, user_info, event_name):
+    def __init__(self, event_id, email, event_name):
         self.event_id = event_id
-        self.user_info = user_info
+        self.email = email
         self.event_name = event_name
 
     def __str__(self):
-        return "%s|%s|%s" % (self.user_info['email'],
+        return "%s|%s|%s" % (self.email,
                              self.event_id,
                              self.event_name)
 
