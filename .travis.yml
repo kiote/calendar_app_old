@@ -6,7 +6,7 @@ python:
 env:
   global:
     - BUILD_ON_TRAVIS=true
-    - PYTHONPATH="/home/travis/build/kiote/housing_survey"
+    - PYTHONPATH="/home/travis/build/kiote/calendar_app"
     - PIP_USE_MIRRORS=true
 
 #commands to install dependencies
