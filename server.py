@@ -34,7 +34,7 @@ def add_event(event_id):
 
             EventSaver(event_created['id'], user_info, session['credentials']).execute()
 
-            return render_template('event.html')
+            return render_template('event.html', event_url=event_created.get('htmlLink'))
         except:
             return traceback.format_exc()
 
