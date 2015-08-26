@@ -1,4 +1,4 @@
-from templates.event_json import event_json
+from templates.event_json import events_json
 from apiclient import discovery
 from models.redis_conn import get_data_connection
 from oauth2client import client
@@ -99,10 +99,12 @@ class EventCreator:
 
     """Create event in GCalendar."""
 
-    def __init__(self, http_auth):
+    def __init__(self, http_auth, event_id):
         self.service = discovery.build('calendar', 'v3', http=http_auth)
+        self.event_id = event_id
 
     def execute(self):
+        event_json = events_json[self.event_id]
         event_created = self.service.events().insert(calendarId='primary',
                                                      body=event_json).execute()
         return event_created
