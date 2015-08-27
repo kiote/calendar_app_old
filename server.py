@@ -21,8 +21,8 @@ SCOPES = ['https://www.googleapis.com/auth/calendar', 'email', 'profile']
 
 @app.route('/addevent/<int:event_id>')
 def add_event(event_id):
-    credentials = client.OAuth2Credentials.from_json(session['credentials'])
     try:
+        credentials = client.OAuth2Credentials.from_json(session['credentials'])
         http_auth = credentials.authorize(httplib2.Http())
         user_info = Email(http_auth).discover_user()
         event_created = EventCreator(http_auth, event_id).execute()
