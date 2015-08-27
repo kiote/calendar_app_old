@@ -21,22 +21,17 @@ SCOPES = ['https://www.googleapis.com/auth/calendar', 'email', 'profile']
 
 @app.route('/addevent/<int:event_id>')
 def add_event(event_id):
-    if 'credentials' not in session:
-        return redirect(url_for('oauth2callback'))
     credentials = client.OAuth2Credentials.from_json(session['credentials'])
-    if credentials.access_token_expired:
-        return redirect(url_for('oauth2callback'))
-    else:
-        try:
-            http_auth = credentials.authorize(httplib2.Http())
-            user_info = Email(http_auth).discover_user()
-            event_created = EventCreator(http_auth, event_id).execute()
+    try:
+        http_auth = credentials.authorize(httplib2.Http())
+        user_info = Email(http_auth).discover_user()
+        event_created = EventCreator(http_auth, event_id).execute()
 
-            EventSaver(event_created['id'], event_id, user_info, session['credentials']).execute()
+        EventSaver(event_created['id'], event_id, user_info, session['credentials']).execute()
 
-            return render_template('event.html', event_url=event_created.get('htmlLink'))
-        except:
-            return traceback.format_exc()
+        return render_template('event.html', event_url=event_created.get('htmlLink'))
+    except:
+        return traceback.format_exc()
 
 
 @app.route('/stat')
@@ -52,7 +47,13 @@ def stat():
 
 @app.route('/')
 def index():
-    return render_template('events.html')
+    if 'credentials' not in session:
+        return redirect(url_for('oauth2callback'))
+    credentials = client.OAuth2Credentials.from_json(session['credentials'])
+    if credentials.access_token_expired:
+        return redirect(url_for('oauth2callback'))
+    else:
+        return render_template('events.html')
 
 @app.route('/oauth2callback')
 def oauth2callback():
