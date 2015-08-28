@@ -7,7 +7,7 @@
   {% endfor %}
   <hr />
   {% endif %}
-  Users, who change the event:<br/>
+  Users, who changed the event:<br/>
   {% for event in changed %}
     {{ event.split('|')[0] }} - {{event.split('|')[2]}}<br/>
   {% endfor %}

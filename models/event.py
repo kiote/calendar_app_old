@@ -82,6 +82,8 @@ class EventChecker:
                                          eventId=self.event_id).execute()
             self.r.lrem('unchecked', str(UncheckedEvent(self.event_id, self.internal_event_id, self.email, self.credentials)), 0)
             internal_event = events_json[int(self.internal_event_id)]
+            print event['start']['dateTime']
+            print internal_event['start']['dateTime']
             if event['start']['dateTime'] != internal_event['start']['dateTime']:
                 self.r.lpush('changed', str(CheckedEvent(self.event_id, self.email, internal_event['summary'])))
             else:
