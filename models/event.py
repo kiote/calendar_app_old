@@ -5,6 +5,9 @@ from oauth2client import client
 import httplib2
 import traceback
 
+from datetime import timedelta
+from datetime import datetime
+
 class UncheckedEvent:
     def __init__(self, event_id, internal_event_id, email, credentials):
         self.event_id = event_id
@@ -84,12 +87,20 @@ class EventChecker:
             internal_event = events_json[int(self.internal_event_id)]
             print event['start']['dateTime']
             print internal_event['start']['dateTime']
-            if event['start']['dateTime'] != internal_event['start']['dateTime']:
+            if self.toUTC(event['start']['dateTime']) != self.toUTC(internal_event['start']['dateTime']):
                 self.r.lpush('changed', str(CheckedEvent(self.event_id, self.email, internal_event['summary'])))
             else:
                 self.r.lpush('unchanged', str(CheckedEvent(self.event_id, self.email, internal_event['summary'])))
         except:
             print traceback.format_exc()
+
+    @staticmethod
+    def toUTC(time_with_tz):
+        time_with_no_tz = time_with_tz[0:19]
+        time_with_no_tz = datetime.strptime(time_with_no_tz, '%Y-%m-%dT%H:%M:%S')
+        time_tz = int(time_with_tz[-6:][0:3])
+
+        return time_with_no_tz + timedelta(hours=time_tz)
 
 
 class EventList:
