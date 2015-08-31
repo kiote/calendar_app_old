@@ -87,6 +87,8 @@ class EventChecker:
             internal_event = events_json[int(self.internal_event_id)]
             print event['start']['dateTime']
             print internal_event['start']['dateTime']
+            print self.toUTC(event['start']['dateTime'])
+            print self.toUTC(internal_event['start']['dateTime'])
             if self.toUTC(event['start']['dateTime']) != self.toUTC(internal_event['start']['dateTime']):
                 self.r.lpush('changed', str(CheckedEvent(self.event_id, self.email, internal_event['summary'])))
             else:
