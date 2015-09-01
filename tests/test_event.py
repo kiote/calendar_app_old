@@ -12,7 +12,7 @@ import mock
 UserMock = {'email': 'dummy@test.com'}
 
 class ServiceMock:
-    def __init__(self, changed):
+    def __init__(self, changed=True):
         self.changed = changed
 
     def get(self, calendarId='', eventId=0):
@@ -54,14 +54,14 @@ class EventCheckerTest(unittest.TestCase):
         self.r.flushall()
 
     @mock.patch('models.event.client')
-    @mock.patch('models.event.discovery.build', lambda a, b, http='': ServiceMockChangedEvent(True))
+    @mock.patch('models.event.discovery.build', lambda a, b, http='': ServiceMockChangedEvent())
     def test_execute_with_changed_event(self, client_mock):
         self.subject.execute()
         changed = self.r.lrange('changed', 0, -1)
         self.assertEquals(len(changed), 1)
 
     @mock.patch('models.event.client')
-    @mock.patch('models.event.discovery.build', lambda a, b, http='': ServiceMockUnchangedEvent(True))
+    @mock.patch('models.event.discovery.build', lambda a, b, http='': ServiceMockUnchangedEvent())
     def test_execute_with_unchanged_event(self, client_mock):
         self.subject.execute()
         changed = self.r.lrange('unchanged', 0, -1)
