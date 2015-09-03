@@ -3,12 +3,10 @@ events_json = [{
   'location': 'http://www.path.to/study/website',
   'description': 'A chance to hear more about Google\'s developer products.',
   'start': {
-    'dateTime': '2015-09-28T06:00:00',
-    'timeZone': 'America/Los_Angeles',
+    'dateTime': '2015-09-28T06:00:00'
   },
   'end': {
-    'dateTime': '2015-09-28T06:30:00',
-    'timeZone': 'America/Los_Angeles',
+    'dateTime': '2015-09-28T06:30:00'
   },
   'attendees': [
     {'email': 'study@studywebsite.com'}
