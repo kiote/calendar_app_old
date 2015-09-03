@@ -101,10 +101,14 @@ class EventChecker:
             print traceback.format_exc()
 
     @staticmethod
-    def toUTC(time_with_no_tz):
-        time_with_no_tz = datetime.strptime(time_with_no_tz[0:19], '%Y-%m-%dT%H:%M:%S')
+    def toUTC(time):
+        time_converted = datetime.strptime(time[0:19], '%Y-%m-%dT%H:%M:%S')
 
-        return time_with_no_tz
+        if len(time) > 19:
+            offset = int(time[-6:][0:3])
+            time_converted -= timedelta(hours=offset)
+
+        return time_converted
 
 
 class EventList:
