@@ -3,11 +3,11 @@ events_json = [{
   'location': 'http://www.path.to/study/website',
   'description': 'A chance to hear more about Google\'s developer products.',
   'start': {
-    'dateTime': '2015-09-28T18:00:00',
+    'dateTime': '2015-09-28T06:00:00',
     'timeZone': 'America/Los_Angeles',
   },
   'end': {
-    'dateTime': '2015-09-28T18:30:00',
+    'dateTime': '2015-09-28T06:30:00',
     'timeZone': 'America/Los_Angeles',
   },
   'attendees': [
@@ -26,12 +26,10 @@ events_json = [{
   'location': 'http://www.path.to/study/website',
   'description': 'A chance to hear more about Google\'s developer products.',
   'start': {
-    'dateTime': '2015-09-29T18:00:00',
-    'timeZone': 'America/Los_Angeles',
+    'dateTime': '2015-09-29T06:00:00Z'
   },
   'end': {
-    'dateTime': '2015-09-29T18:30:00',
-    'timeZone': 'America/Los_Angeles',
+    'dateTime': '2015-09-29T06:30:00Z'
   },
   'attendees': [
     {'email': 'study@studywebsite.com'}
@@ -50,12 +48,10 @@ event_json_changed = {
   'location': 'http://www.path.to/study/website',
   'description': 'A chance to hear more about Google\'s developer products.',
   'start': {
-    'dateTime': '2015-09-29T18:00:00',
-    'timeZone': 'America/Los_Angeles',
+    'dateTime': '2015-09-29T06:00:00Z'
   },
   'end': {
-    'dateTime': '2015-09-29T18:30:00',
-    'timeZone': 'America/Los_Angeles',
+    'dateTime': '2015-09-29T06:30:00Z'
   },
   'recurrence': [
     'RRULE:FREQ=DAILY;COUNT=2'
