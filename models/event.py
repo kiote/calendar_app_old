@@ -104,7 +104,7 @@ class EventChecker:
     def toUTC(time):
         time_converted = datetime.strptime(time[0:19], '%Y-%m-%dT%H:%M:%S')
 
-        if len(time) > 19:
+        if len(time) > 20:
             offset = int(time[-6:][0:3])
             time_converted -= timedelta(hours=offset)
 
